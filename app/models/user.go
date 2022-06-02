@@ -5,10 +5,10 @@ type User struct {
 	BaseModel
 
 	// 账号
-	UserId string `gorm:"column:user_id;not null;size:255"`
+	UserId string `gorm:"column:user_id;not null;"`
 
 	// 账号类型
-	UserType string `gorm:"column:user_type;not null;size:255"`
+	UserType string `gorm:"column:user_type;not null;"`
 
 	// oa简要信息
 	Oa map[string]string `gorm:"column:oa;serializer:json"`

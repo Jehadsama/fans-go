@@ -5,7 +5,7 @@ import "time"
 // gorm.Model 的定义
 type BaseModel struct {
 	// 其实是mongo objectid
-	ID string `gorm:"primaryKey;column:_id;size:255"`
+	ID string `gorm:"primaryKey;column:_id;"`
 	// 创建时间
 	CreatedAt time.Time `gorm:"column:created_at"`
 	// 修改时间
