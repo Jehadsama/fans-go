@@ -1,5 +1,7 @@
 package models
 
+import "fans-go/app/connectors/db"
+
 type User struct {
 	// 嵌入公共model
 	BaseModel
@@ -18,4 +20,8 @@ type User struct {
 
 	// 关注多少人
 	FollowingCount uint64 `gorm:"type:int(10);unsigned;default:0" json:"following_count"`
+}
+
+func (user *User) GetUsersByIds(ids []string) interface{} {
+	return db.DB.Where("user_id IN ? AND user_type IN []string{'oa', 'virtual'}", ids).Find(&user)
 }
