@@ -7,20 +7,20 @@ type Relationship struct {
 	BaseModel
 
 	// 关注的目标,其实是mongo objectid
-	TargetUser string `gorm:"column:target_user;not null;"`
+	TargetUser string `gorm:"type:varchar(255);not null;" json:"target_user"`
 
 	// 发起关注的人,其实是mongo objectid
-	SourceUser string `gorm:"column:source_user;not null;"`
+	SourceUser string `gorm:"type:varchar(255);not null;" json:"source_user"`
 
 	// user_type.user_id
-	TargetUserIndex string `gorm:"column:target_user_index;not null;"`
+	TargetUserIndex string `gorm:"type:varchar(255);not null;" json:"target_user_index"`
 
 	// user_type.user_id
-	SourceUserIndex string `gorm:"column:source_user_index;not null;"`
+	SourceUserIndex string `gorm:"type:varchar(255);not null;" json:"source_user_index"`
 
 	// 是否关注
-	IsFollow bool `gorm:"column:is_follow;default:true"`
+	IsFollow bool `gorm:"default:true" json:"is_follow"`
 
 	// 关注时间
-	FollowedAt time.Time `gorm:"column:followed_at"`
+	FollowedAt time.Time `json:"followed_at"`
 }
