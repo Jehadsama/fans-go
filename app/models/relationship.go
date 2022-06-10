@@ -7,10 +7,10 @@ type Relationship struct {
 	BaseModel
 
 	// 关注的目标,其实是mongo objectid
-	TargetUser string `gorm:"type:varchar(255);not null;" json:"target_user"`
+	TargetUser string `gorm:"type:varchar(255);primaryKey;not null;" json:"target_user"`
 
 	// 发起关注的人,其实是mongo objectid
-	SourceUser string `gorm:"type:varchar(255);not null;" json:"source_user"`
+	SourceUser string `gorm:"type:varchar(255);primaryKey;not null;" json:"source_user"`
 
 	// user_type.user_id
 	TargetUserIndex string `gorm:"type:varchar(255);not null;" json:"target_user_index"`
