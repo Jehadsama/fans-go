@@ -1,41 +1,33 @@
 package db
 
 import (
+	"fmt"
 	"os"
-	"strconv"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
-	gormMysql "gorm.io/driver/mysql"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
 	_ "fans-go/app/config"
 	"fans-go/app/libs/utils"
 )
 
-func ConnectToMysql() *gorm.DB {
-
+func getMySQLUri() string {
 	user := os.Getenv("MYSQL_USER")
 	password := os.Getenv("MYSQL_PASSWORD")
-	net := os.Getenv("mysql_net")
 	host := os.Getenv("MYSQL_HOST")
+	port := os.Getenv("MYSQL_PORT")
 	database := os.Getenv("MYSQL_DATABASE")
-	parsetime, _ := strconv.ParseBool(os.Getenv("MYSQL_PARSETIME"))
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true",
+		user,
+		password,
+		host,
+		port,
+		database)
+}
 
-	mysqlConfig := &mysql.Config{
-		User:      user,
-		Passwd:    password,
-		Net:       net,
-		Addr:      host,
-		DBName:    database,
-		ParseTime: parsetime,
-	}
-
-	db, err := gorm.Open(gormMysql.New(gormMysql.Config{
-		DriverName: "mysql",
-		DSN:        mysqlConfig.FormatDSN(),
-	}), &gorm.Config{})
-
+func ConnectToMysql() *gorm.DB {
+	db, err := gorm.Open(mysql.Open(getMySQLUri()), &gorm.Config{})
 	utils.CheckError("ConnectToMysql,db", err)
 
 	sqlDB, err := db.DB()
