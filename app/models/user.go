@@ -23,5 +23,5 @@ type User struct {
 }
 
 func (user *User) GetUsersByIds(ids []string) interface{} {
-	return db.DB.Where("user_id IN ? AND user_type IN []string{'oa', 'virtual'}", ids).Find(&user)
+	return db.DB.Model(&user).Select("user_id", "user_type", "follower_count").Where("user_id IN ? AND user_type IN []string{'oa', 'virtual'}", ids).Find(&user)
 }
