@@ -2,11 +2,13 @@ package db
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	_ "fans-go/app/config"
 	"fans-go/app/libs/utils"
@@ -27,7 +29,17 @@ func getMySQLUri() string {
 }
 
 func ConnectToMysql() *gorm.DB {
-	db, err := gorm.Open(mysql.Open(getMySQLUri()), &gorm.Config{})
+	db, err := gorm.Open(
+		mysql.Open(getMySQLUri()),
+		&gorm.Config{Logger: logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+			logger.Config{
+				SlowThreshold:             time.Second, // Slow SQL threshold
+				LogLevel:                  logger.Info, // Log level
+				IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+				Colorful:                  true,        // Disable color
+			},
+		)})
 	utils.CheckError("ConnectToMysql,db", err)
 
 	sqlDB, err := db.DB()
