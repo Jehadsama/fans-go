@@ -29,8 +29,10 @@ func getMySQLUri() string {
 }
 
 func ConnectToMysql() *gorm.DB {
+	dsn := getMySQLUri()
+	log.Println("dsn:", dsn)
 	db, err := gorm.Open(
-		mysql.Open(getMySQLUri()),
+		mysql.Open(dsn),
 		&gorm.Config{Logger: logger.New(
 			log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 			logger.Config{
