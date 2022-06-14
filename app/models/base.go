@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fans-go/app/connectors/db"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -22,4 +23,8 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 	id := primitive.NewObjectID().Hex()
 	b.ID = id
 	return
+}
+
+func Model(value interface{}) *gorm.DB {
+	return db.DB.Model(value)
 }
