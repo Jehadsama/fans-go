@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "fans-go/app/config"
-	"fans-go/app/models"
+	"fans-go/app/proxy"
 	"fmt"
 	"os"
 )
@@ -11,12 +11,14 @@ func main() {
 
 	fmt.Println(os.Getenv("MYSQL_USER"))
 
-	user := &models.User{
-		// BaseModel: models.BaseModel{},
-		// UserType: "j",
+	user, err := proxy.FindOneOrCreateDB(&proxy.Payload{
+		UserId:   "je",
+		UserType: "oa",
+	})
+	// user.GetUsersByIds([]string{"hanyiding"})
+	if err != nil {
+		fmt.Println(err)
 	}
-	user.GetUsersByIds([]string{"hanyiding"})
-
 	fmt.Println(user)
 
 }
