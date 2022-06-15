@@ -11,14 +11,21 @@ func main() {
 
 	fmt.Println(os.Getenv("MYSQL_USER"))
 
-	user, err := proxy.FindOneOrCreateDB(&proxy.Payload{
-		UserId:   "je",
-		UserType: "oa",
-	})
+	// user, err := proxy.FindOneOrCreateDB(&proxy.Payload{
+	// 	UserId:   "je",
+	// 	UserType: "oa",
+	// })
+	// user := &models.User{}
 	// user.GetUsersByIds([]string{"hanyiding"})
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(user)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	payload := &proxy.Payload{UserId: "lixunhuan", UserType: "portal"}
+	user := proxy.FindOneOrCreateDB(payload)
+
+	fmt.Printf("%#v", user)
+	fmt.Println("=========")
+	fmt.Println()
 
 }

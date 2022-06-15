@@ -15,37 +15,53 @@ var followKeysMapping = map[string](map[string]string){
 	},
 }
 
-// const findOneOrCreateDB = async (payload) => {
-// 	const baseQuery = _.pick(payload, ['user_id', 'user_type']);
-// 	const user = await models.td_user.findOne({ where: baseQuery, raw: true });
-// 	if (user) {
-// 	  return user;
-// 	}
-
-// 	const { user_id: userID, user_type: userType } = payload;
-// 	// validate whether oaID(userID) was correct
-// 	if (userType === 'oa') {
-// 	  const oaUsername = await models.oa_p_gf_user.usernameByOAID(userID);
-// 	  baseQuery.oa = {
-// 		username: oaUsername,
-// 	  };
-// 	}
-
-// 	// upsert: MySQL - Implemented with ON DUPLICATE KEY UPDATE
-// 	await models.td_user.upsert(baseQuery);
-// 	return models.td_user.findOne({ where: baseQuery, raw: true });
-//   };
-
 type Payload struct {
-	UserId   string `json:"user_id"`
-	UserType string `json:"user_type"`
+	UserId   string            `json:"user_id"`
+	UserType string            `json:"user_type"`
+	Oa       map[string]string `json:"oa"`
 }
 
-func FindOneOrCreateDB(payload *Payload) (*models.User, error) {
+func FindOneOrCreateDB(payload *Payload) *models.User {
 	var user *models.User
 	result := models.Model(&user).Where("user_id = ? AND user_type = ?", payload.UserId, payload.UserType).First(&user)
 	if result.RowsAffected == 1 {
-		return user, nil
+		return user
 	}
-	return nil, result.Error
+	if payload.UserType == "oa" {
+		oaUsername := (&models.OaPGfUser{}).UsernameByOAID(payload.UserId)
+		payload.Oa = map[string]string{"username": oaUsername}
+	}
+
+	models.Model(&user).Where(models.User{UserId: payload.UserId, UserType: payload.UserType}).FirstOrCreate(&user)
+	return user
+}
+
+
+const updateFollowCountByID = async ({
+	userObjectID,
+	followType = 'source',
+  }) => {
+	const followCount = await models.td_relationship.count({
+	  where: {
+		[followKeysMapping[followType].relationship]: userObjectID,
+		is_follow: true,
+	  },
+	});
+
+	await models.td_user.update(
+	  {
+		[followKeysMapping[followType].user]: followCount,
+	  },
+	  { where: { _id: userObjectID } }
+	);
+
+	return models.td_user.findOne({ where: { _id: userObjectID } });
+  };
+
+func UpdateFollowCountByID (userObjectID, followType string) *models.User{
+	if followType == "" {
+		followType= "source"
+	}
+
+
 }
