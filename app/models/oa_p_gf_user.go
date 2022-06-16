@@ -58,13 +58,9 @@ func (OaPGfUser) TableName() string {
 }
 
 func (user *OaPGfUser) UsernameByOAID(oaID string) string {
-	result := Model(&user).Select("username").Where("loginid = ?", oaID).First(&user)
+	result := Model("oa_p_gf_user").Select("username").Where("loginid = ?", oaID).First(&user)
 	if result.RowsAffected == 1 {
 		return user.Username
 	}
 	return ""
-}
-
-func OaPGfUserModel() *OaPGfUser {
-	return &OaPGfUser{}
 }
