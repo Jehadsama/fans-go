@@ -25,6 +25,17 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 
-func Model(value interface{}) *gorm.DB {
-	return db.DB.Model(value)
+func Model(name string) *gorm.DB {
+	var m *gorm.DB
+	switch name {
+	case "user":
+		m = db.DB.Model(&User{})
+	case "relationship":
+		m = db.DB.Model(&Relationship{})
+	case "oa_p_gf_user":
+		m = db.DB.Model(&OaPGfUser{})
+	default:
+		panic("invalid model name")
+	}
+	return m
 }
