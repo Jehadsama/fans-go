@@ -42,7 +42,7 @@ type User struct {
 	UserType string `gorm:"type:varchar(255);not null;type:enum('oa','portal','virtual')" json:"user_type"`
 
 	// oa简要信息
-	Oa map[string]string `gorm:"serialize:json" json:"oa"`
+	Oa map[string]string `gorm:"serializer:json" json:"oa"`
 
 	// 被多少人关注
 	FollowerCount uint64 `gorm:"type:int(10);unsigned;default:0" json:"follower_count"`
