@@ -63,5 +63,5 @@ type SimpleUser struct {
 }
 
 func (user *User) GetUsersByIds(ids []string) *gorm.DB {
-	return Model(&user).Where("user_id IN ? AND user_type IN ?", ids, []string{"oa", "virtual"}).Find(&user)
+	return Model("user").Where("user_id IN ? AND user_type IN ?", ids, []string{"oa", "virtual"}).Find(&user)
 }
