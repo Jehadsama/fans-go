@@ -9,7 +9,7 @@ import (
 )
 
 type BaseModel struct {
-	// 其实是mongo objectid, `gorm:"type:varchar(255);column:_id;primaryKey;not null;" json:"_id"`
+	// 其实是mongo objectid
 	ID string `gorm:"type:varchar(255);column:_id;primaryKey;not null;" json:"_id"`
 	// 创建时间
 	CreatedAt time.Time `json:"created_at"`
